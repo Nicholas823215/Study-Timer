@@ -14,40 +14,24 @@ except:
     mode = "b"
 
 #opens or creates a new csv file
-file = open("output.csv","r")
-
-# gets the current index
 try:
-    index = open("index.txt","r")
-    ind = None
+    file = open("output.csv","r")
+    file_text = file.read()
+    file.close()
+    file = open("output.csv","w")
+    file_line_by = file_text.strip()
+    file_line_by = file_line_by.split("\n")
+    file_line_by_line = []
+    for i in range(len(file_line_by)):
+        file_line_by_line.append( file_line_by[i].split(","))
+    print(file_line_by)
 except:
-    index = open("index.txt","w")
-    ind = 2
-if ind == None:
-    for i in index.readlines():
-        i = i.strip()
-        try:
-            if i[0] != "#":
-                ind = int(i)
-                break
-        except:
-            pass
-index.close()
+    file_line_by = " "
+
+
 
 timern = time.localtime(time.time())
 
-print(f"the current index of the csv file is: {ind}")
-
-# prosessing the current data in output.csv
-file_text = file.read()
-file.close()
-file = open("output.csv","w")
-file_line_by = file_text.strip()
-file_line_by = file_line_by.split("\n")
-file_line_by_line = []
-for i in range(len(file_line_by)):
-    file_line_by_line.append( file_line_by[i].split(","))
-print(file_line_by)
 
 text = "Start_min,Start_hr,Start_date,Index,Stop_min,Stop_hr,Stop_date,Time_Elapsed_min,Time_Elapsed_hr,Total_Today_min"
 
