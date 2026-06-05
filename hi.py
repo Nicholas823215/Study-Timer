@@ -1,5 +1,6 @@
 import time
 import sys
+import math
 
 #gets from the user what to do either "start" or "stop" or "sta" or "sto"
 arg = sys.argv[1:]
@@ -29,12 +30,8 @@ except:
 
 file = open("output.csv","w")
 
-
 timern = time.localtime(time.time())
-
-
 text = "Start_min,Start_hr,Start_date,Index,Stop_min,Stop_hr,Stop_date,Time_Elapsed_min,Time_Elapsed_hr,Total_Today_min"
-
 #making sure that the titles are correct
 if file_line_by[0] != text:
     print(text,file = file)
@@ -45,10 +42,11 @@ if file_line_by[0] != text:
     sys.exit()
 else:
     is_good = True
-
-if instruction.lower() in ["start","sta"]:
+if instruction.lower() in ["start","sta"] and len(file_line_by_line[-1]) == len(file_line_by_line[0]):
     file_line_by.append(f"{timern.tm_min},{timern.tm_hour},{timern.tm_mday}-{timern.tm_mon}-{timern.tm_year},{pow(2, timern.tm_mday)*pow(3, timern.tm_mon)&pow(5, timern.tm_year)}")
-    print(f"Started at: {timern.tm_hour}:{timern.tm_min:0>2}\nDate: {timern.tm_mday}-{timern.tm_mon}-{timern.tm_year}\nID_date = {pow(2, timern.tm_mday)*pow(3, timern.tm_mon)&pow(5, timern.tm_year)}")
+    print(f'''Started at: {timern.tm_hour}:{timern.tm_min:0>2}
+Date: {timern.tm_mday}-{timern.tm_mon}-{timern.tm_year}
+ID_date = {pow(2, timern.tm_mday)*pow(3, timern.tm_mon)&pow(5, timern.tm_year)}''')
 if instruction.lower() in ["stop","sto"] and len(file_line_by_line[-1]) != len(file_line_by_line[0]):
     delta_t = timern.tm_min -int(file_line_by_line[-1][0]) + 60*(timern.tm_hour - int(file_line_by_line[-1][1]))
     file_line_by[-1] = file_line_by[-1]+ f",{timern.tm_min},{timern.tm_hour},{timern.tm_mday}-{timern.tm_mon}-{timern.tm_year},{delta_t},{delta_t/60}"
@@ -68,13 +66,14 @@ if instruction.lower() in ["stop","sto"] and len(file_line_by_line[-1]) != len(f
 Date: {timern.tm_mday}-{timern.tm_mon}-{timern.tm_year}
 ID_date = {pow(2, timern.tm_mday)*pow(3, timern.tm_mon)&pow(5, timern.tm_year)}
 Finished at: {timern.tm_hour}:{timern.tm_min:0>2}
-Time Studied: {delta_t} min
-Total Studied today: {tot_time} min
+Time Studied: {math.floor(delta_t/60)}:{delta_t%60:0>2}
+Total Studied today: {math.floor(tot_time/60)}:{tot_time%60:0>2}
 ''')
 if instruction.lower() in ["time", "time studied", "t"]:
     if len(file_line_by_line[-1]) != len(file_line_by_line[0]):
         delta_t = timern.tm_min -int(file_line_by_line[-1][0]) + 60*(timern.tm_hour - int(file_line_by_line[-1][1]))
-        print(f"Studuing Right now\nTimes studed: {delta_t} min")
+        print(f'''Studuing Right now,
+Times studed: {timern.tm_hour - int(file_line_by_line[-1][1])}:{timern.tm_min -int(file_line_by_line[-1][0])} ''')
     else:
         time_tody = []
         tot_time = 0
@@ -87,25 +86,41 @@ if instruction.lower() in ["time", "time studied", "t"]:
             except:
                 pass
         tot_time += float(file_line_by[-1].split(",")[-2])
-        print(f"Finished studieng,\nLast Study Sesion was at {file_line_by_line[-1][1]}:{file_line_by_line[-1][0]:0>2} to {file_line_by_line[-1][5]}:{file_line_by_line[-1][4]:0>2}\nStudied for {file_line_by_line[-1][7]} min\nCumulative Time: {file_line_by_line[-1][9]} min")
+        delta_t = (int(file_line_by_line[-1][5]) - int(file_line_by_line[-1][1]))*60 + int(file_line_by_line[-1][4]) -int(file_line_by_line[-1][0])
+        print(f'''Finished studieng,
+Last Study Sesion was at {file_line_by_line[-1][1]}:{file_line_by_line[-1][0]:0>2} to {file_line_by_line[-1][5]}:{file_line_by_line[-1][4]:0>2}
+Studied for {math.floor(delta_t/60)}:{delta_t%60:0>2} 
+Cumulative Time: {math.floor(float(file_line_by_line[-1][9])/60)}:{float(file_line_by_line[-1][9])%60:0>2} 
+''')
 if instruction.lower() in ["sum", "summary", "s"]:
     if len(file_line_by_line[-1]) != len(file_line_by_line[0]):
         delta_t = timern.tm_min -int(file_line_by_line[-1][0]) + 60*(timern.tm_hour - int(file_line_by_line[-1][1]))
-        print(f"Currently studieng,\nLast Study Sesion was at {file_line_by_line[-2][1]}:{file_line_by_line[-2][0]:0>2} to {file_line_by_line[-2][5]}:{file_line_by_line[-2][4]:0>2}\nThis session stated at: {file_line_by_line[-1][1]}:{file_line_by_line[-1][0]:0>2}\nStuding for {delta_t} min\nCumulative Time: {file_line_by_line[-2][9]} min")
+        print(f'''Currently studieng,
+Last Study Sesion was at {file_line_by_line[-2][1]}:{file_line_by_line[-2][0]:0>2} to {file_line_by_line[-2][5]}:{file_line_by_line[-2][4]:0>2}
+This session stated at: {file_line_by_line[-1][1]}:{file_line_by_line[-1][0]:0>2}
+Studing for {math.floor(delta_t/60)}:{delta_t%60:0>2}
+Cumulative Time: {math.floor((float(file_line_by_line[-2][9]) + delta_t)/60)}:{(float(file_line_by_line[-2][9]) + delta_t)%60:0>2} ''')
     else:
-        print(f"Finished studieng,\nLast Study Sesion was at {file_line_by_line[-1][1]}:{file_line_by_line[-1][0]:0>2} to {file_line_by_line[-1][5]}:{file_line_by_line[-1][4]:0>2}\nStudied for {file_line_by_line[-1][7]} min\nCumulative Time: {file_line_by_line[-1][9]} min")
-if instruction.lower() in ["help", "?"]:
-    print("Either the the user did not imput a extra charicter or the user typed in \"help\" or \"?\"")
-    print('''Command | What it dose
---------|------------------------------------------------------------------------------
-start   |Begins a new timer
-stop    | Ends the currently running timer
-?       | Help, dyspalys the helps screan
-summary | Summerises the current and/or last timer
-data    | Dysplayes all the users previousely stored data in output.csv
-time    | Displayes the current study timer, if not studing, will produce same as sum
+        delta_t = (int(file_line_by_line[-1][5]) - int(file_line_by_line[-1][1]))*60 + int(file_line_by_line[-1][4]) -int(file_line_by_line[-1][0])
+        print(f'''Finished studieng,
+Last Study Sesion was at {file_line_by_line[-1][1]}:{file_line_by_line[-1][0]:0>2} to {file_line_by_line[-1][5]}:{file_line_by_line[-1][4]:0>2}
+Studied for : {math.floor(delta_t/60)}:{delta_t%60}
+Cumulative Time: {file_line_by_line[-1][9]} {math.floor(float(file_line_by_line[-1][9])/60)}:{float(file_line_by_line[-1][9])%60:0>2}
 ''')
-if instruction.lower() in ["data"]:
+if instruction.lower() in ["help", "?"]:
+    print()
+    print("     HELLO AND WELLCOME TO THE STUDING THING!!!\n")
+    print("The following is a list of command arguments that can be added to the end of the \n\"python3 hi.py\" call that can be used to make this program do spesific things")
+    print('''\nArgument |Short Cut | What it dose
+---------|----------|------------------------------------------------------------------------------
+start    |sta       | Begins a new timer
+stop     |sto       | Ends the currently running timer
+help     |?         | Help, dyspalys the helps screan
+summary  |s         | Summerises the current and/or last timer
+data     |d         | Dysplayes all the users previousely stored data in output.csv
+time     |t         | Displayes the current study timer, if not studing, will produce same as sum
+''')
+if instruction.lower() in ["data", "d"]:
     length_needed = []
     for i in file_line_by_line[0]:
         length_needed.append(len(i))
@@ -121,8 +136,6 @@ if instruction.lower() in ["data"]:
                 else:
                     print("-",end = "")   
         print()
-
-
 if is_good:
     for i in range(len(file_line_by)):
         if i < len(file_line_by) - 1:
