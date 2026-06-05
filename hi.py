@@ -87,13 +87,13 @@ if instruction.lower() in ["time", "time studied", "t"]:
             except:
                 pass
         tot_time += float(file_line_by[-1].split(",")[-2])
-        print(f"Finished studieng,\nLast Study Sesion was at {file_line_by_line[-1][1]}:{file_line_by_line[-1][0]:0>2} to {file_line_by_line[-1][5]}:{file_line_by_line[-1][4]:0>2}\nStudied for {file_line_by_line[-1][7]} min\nCumulative Time: {file_line_by_line[-1][8]} min")
+        print(f"Finished studieng,\nLast Study Sesion was at {file_line_by_line[-1][1]}:{file_line_by_line[-1][0]:0>2} to {file_line_by_line[-1][5]}:{file_line_by_line[-1][4]:0>2}\nStudied for {file_line_by_line[-1][7]} min\nCumulative Time: {file_line_by_line[-1][9]} min")
 if instruction.lower() in ["sum", "summary", "s"]:
     if len(file_line_by_line[-1]) != len(file_line_by_line[0]):
         delta_t = timern.tm_min -int(file_line_by_line[-1][0]) + 60*(timern.tm_hour - int(file_line_by_line[-1][1]))
-        print(f"Currently studieng,\nLast Study Sesion was at {file_line_by_line[-2][1]}:{file_line_by_line[-2][0]:0>2} to {file_line_by_line[-2][5]}:{file_line_by_line[-2][4]:0>2}\nStuding for {delta_t} min\nCumulative Time: {file_line_by_line[-2][8]} min")
+        print(f"Currently studieng,\nLast Study Sesion was at {file_line_by_line[-2][1]}:{file_line_by_line[-2][0]:0>2} to {file_line_by_line[-2][5]}:{file_line_by_line[-2][4]:0>2}\nThis session stated at: {file_line_by_line[-2][1]}:{file_line_by_line[-2][0]:0>2}\nStuding for {delta_t} min\nCumulative Time: {file_line_by_line[-2][9]} min")
     else:
-        print(f"Finished studieng,\nLast Study Sesion was at {file_line_by_line[-1][1]}:{file_line_by_line[-1][0]:0>2} to {file_line_by_line[-1][5]}:{file_line_by_line[-1][4]:0>2}\nStudied for {file_line_by_line[-1][7]} min\nCumulative Time: {file_line_by_line[-1][8]} min")
+        print(f"Finished studieng,\nLast Study Sesion was at {file_line_by_line[-1][1]}:{file_line_by_line[-1][0]:0>2} to {file_line_by_line[-1][5]}:{file_line_by_line[-1][4]:0>2}\nStudied for {file_line_by_line[-1][7]} min\nCumulative Time: {file_line_by_line[-1][9]} min")
 if instruction.lower() in ["help", "?"]:
     print("Either the the user did not imput a extra charicter or the user typed in \"help\" or \"?\"")
     print('''Command | What it dose
