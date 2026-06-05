@@ -112,7 +112,14 @@ if instruction.lower() in ["data"]:
     length_needed[8] += 6
     for i in file_line_by_line:
         for n in range(len(i)):
-            print(str(i[n])+" "*(length_needed[n]-len(str(i[n]))),"|",end = "")       
+            print(str(i[n])+" "*(length_needed[n]-len(str(i[n]))),"|",end = "")  
+        if i[n] == "Total_Today_min":
+            print()
+            for h in range(128):
+                if h in [127,10,20,32,39,49,58,69,87,110]:
+                    print("|",end = "")
+                else:
+                    print("-",end = "")   
         print()
 
 
