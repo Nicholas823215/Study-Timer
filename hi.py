@@ -18,16 +18,16 @@ try:
     file = open("output.csv","r")
     file_text = file.read()
     file.close()
-    file = open("output.csv","w")
     file_line_by = file_text.strip()
     file_line_by = file_line_by.split("\n")
     file_line_by_line = []
     for i in range(len(file_line_by)):
         file_line_by_line.append( file_line_by[i].split(","))
-    print(file_line_by)
 except:
     file_line_by = " "
+    file_text = ""
 
+file = open("output.csv","w")
 
 
 timern = time.localtime(time.time())
@@ -48,6 +48,7 @@ else:
 
 if instruction.lower() in ["start","sta"]:
     file_line_by.append(f"{timern.tm_min},{timern.tm_hour},{timern.tm_mday}-{timern.tm_mon}-{timern.tm_year},{pow(2, timern.tm_mday)*pow(3, timern.tm_mon)&pow(5, timern.tm_year)}")
+    print(f"Started at: {timern.tm_hour}:{timern.tm_min:0>2}\nDate: {timern.tm_mday}-{timern.tm_mon}-{timern.tm_year}\nID_date = {pow(2, timern.tm_mday)*pow(3, timern.tm_mon)&pow(5, timern.tm_year)}")
 if instruction.lower() in ["stop","sto"] and len(file_line_by_line[-1]) != len(file_line_by_line[0]):
     delta_t = timern.tm_min -int(file_line_by_line[-1][0]) + 60*(timern.tm_hour - int(file_line_by_line[-1][1]))
     file_line_by[-1] = file_line_by[-1]+ f",{timern.tm_min},{timern.tm_hour},{timern.tm_mday}-{timern.tm_mon}-{timern.tm_year},{delta_t},{delta_t/60}"
@@ -63,6 +64,13 @@ if instruction.lower() in ["stop","sto"] and len(file_line_by_line[-1]) != len(f
             pass
     tot_time += float(file_line_by[-1].split(",")[-2])
     file_line_by[-1] = file_line_by[-1] + f",{tot_time}"
+    print(f'''Started at: {file_line_by_line[-1][1]}:{file_line_by_line[-1][0]:0>2}
+Date: {timern.tm_mday}-{timern.tm_mon}-{timern.tm_year}
+ID_date = {pow(2, timern.tm_mday)*pow(3, timern.tm_mon)&pow(5, timern.tm_year)}
+Finished at: {timern.tm_hour}:{timern.tm_min:0>2}
+Time Studied: {delta_t} min
+Total Studied today: {tot_time} min
+''')
 
 
 
