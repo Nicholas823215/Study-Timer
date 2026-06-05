@@ -6,7 +6,7 @@ arg = sys.argv[1:]
 try:
     instruction = arg[0]
 except:
-    instruction = None
+    instruction = "help"
     # mode can either be "b" or "r" for for which it desides wether to keep runnign or not
 try:
     mode = arg[1]
@@ -71,8 +71,48 @@ Finished at: {timern.tm_hour}:{timern.tm_min:0>2}
 Time Studied: {delta_t} min
 Total Studied today: {tot_time} min
 ''')
-
-
+if instruction.lower() in ["time", "time studied", "t"]:
+    if len(file_line_by_line[-1]) != len(file_line_by_line[0]):
+        delta_t = timern.tm_min -int(file_line_by_line[-1][0]) + 60*(timern.tm_hour - int(file_line_by_line[-1][1]))
+        print(f"Studuing Right now\nTimes studed: {delta_t} min")
+    else:
+        time_tody = []
+        tot_time = 0
+        for i in file_line_by_line:
+            if i[2] == f"{timern.tm_mday}-{timern.tm_mon}-{timern.tm_year}":
+                time_tody.append(i)
+        for i in time_tody:
+            try:
+                tot_time += int(i[7])
+            except:
+                pass
+        tot_time += float(file_line_by[-1].split(",")[-2])
+        print(f"Finished studieng,\nLast Study Sesion was at {file_line_by_line[-1][1]}:{file_line_by_line[-1][0]:0>2} to {file_line_by_line[-1][5]}:{file_line_by_line[-1][4]:0>2}\nStudied for {file_line_by_line[-1][7]} min\nCumulative Time: {file_line_by_line[-1][8]} min")
+if instruction.lower() in ["sum", "summary", "s"]:
+    if len(file_line_by_line[-1]) != len(file_line_by_line[0]):
+        delta_t = timern.tm_min -int(file_line_by_line[-1][0]) + 60*(timern.tm_hour - int(file_line_by_line[-1][1]))
+        print(f"Currently studieng,\nLast Study Sesion was at {file_line_by_line[-2][1]}:{file_line_by_line[-2][0]:0>2} to {file_line_by_line[-2][5]}:{file_line_by_line[-2][4]:0>2}\nStuding for {delta_t} min\nCumulative Time: {file_line_by_line[-2][8]} min")
+    else:
+        print(f"Finished studieng,\nLast Study Sesion was at {file_line_by_line[-1][1]}:{file_line_by_line[-1][0]:0>2} to {file_line_by_line[-1][5]}:{file_line_by_line[-1][4]:0>2}\nStudied for {file_line_by_line[-1][7]} min\nCumulative Time: {file_line_by_line[-1][8]} min")
+if instruction.lower() in ["help", "?"]:
+    print("Either the the user did not imput a extra charicter or the user typed in \"help\" or \"?\"")
+    print('''Command | What it dose
+--------|---------------------------------------------------------------
+start   |Begins a new timer
+stop    | Ends the currently running timer
+?       | Help, dyspalys the helps screan
+summary | Summerises the current and/or last timer
+data    | Dysplayes all the users previousely stored data in output.csv
+''')
+if instruction.lower() in ["data"]:
+    length_needed = []
+    for i in file_line_by_line[0]:
+        length_needed.append(len(i))
+    length_needed[8] += 6
+    for i in file_line_by_line:
+        for n in range(len(i)):
+            print(str(i[n])+" "*(length_needed[n]-len(str(i[n]))),"|",end = "")       
+        print()
 
 
 if is_good:
