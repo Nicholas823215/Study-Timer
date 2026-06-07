@@ -31,7 +31,7 @@ except:
 file = open("output.csv","w")
 
 timern = time.localtime(time.time())
-text = "Start_min,Start_hr,Start_date,Index,Stop_min,Stop_hr,Stop_date,Time_Elapsed_min,Time_Elapsed_hr,Total_Today_min"
+text = "Start_min,Start_hr,Start_date,Index,Stop_min,Stop_hr,Stop_date,Delta_min,Delta_hr,Total_day_min"
 #making sure that the titles are correct
 if file_line_by[0] != text:
     print(text,file = file)
@@ -47,6 +47,8 @@ if instruction.lower() in ["start","sta"] and len(file_line_by_line[-1]) == len(
     print(f'''Started at: {timern.tm_hour}:{timern.tm_min:0>2}
 Date: {timern.tm_mday}-{timern.tm_mon}-{timern.tm_year}
 ID_date = {pow(2, timern.tm_mday)*pow(3, timern.tm_mon)&pow(5, timern.tm_year)}''')
+    
+    
 if instruction.lower() in ["stop","sto"] and len(file_line_by_line[-1]) != len(file_line_by_line[0]):
     delta_t = timern.tm_min -int(file_line_by_line[-1][0]) + 60*(timern.tm_hour - int(file_line_by_line[-1][1]))
     file_line_by[-1] = file_line_by[-1]+ f",{timern.tm_min},{timern.tm_hour},{timern.tm_mday}-{timern.tm_mon}-{timern.tm_year},{delta_t},{delta_t/60}"
@@ -69,11 +71,13 @@ Finished at: {timern.tm_hour}:{timern.tm_min:0>2}
 Time Studied: {math.floor(delta_t/60)}:{delta_t%60:0>2}
 Total Studied today: {math.floor(tot_time/60)}:{tot_time%60:0>2}
 ''')
+    
+
 if instruction.lower() in ["time", "time studied", "t"]:
     if len(file_line_by_line[-1]) != len(file_line_by_line[0]):
         delta_t = timern.tm_min -int(file_line_by_line[-1][0]) + 60*(timern.tm_hour - int(file_line_by_line[-1][1]))
         print(f'''Studuing Right now,
-Times studed: {timern.tm_hour - int(file_line_by_line[-1][1])}:{timern.tm_min -int(file_line_by_line[-1][0])} ''')
+Times studed: {timern.tm_hour - int(file_line_by_line[-1][1])}:{timern.tm_min -int(file_line_by_line[-1][0]):0>2} ''')
     else:
         time_tody = []
         tot_time = 0
@@ -105,8 +109,10 @@ Cumulative Time: {math.floor((float(file_line_by_line[-2][9]) + delta_t)/60)}:{(
         print(f'''Finished studieng,
 Last Study Sesion was at {file_line_by_line[-1][1]}:{file_line_by_line[-1][0]:0>2} to {file_line_by_line[-1][5]}:{file_line_by_line[-1][4]:0>2}
 Studied for : {math.floor(delta_t/60)}:{delta_t%60}
-Cumulative Time: {file_line_by_line[-1][9]} {math.floor(float(file_line_by_line[-1][9])/60)}:{float(file_line_by_line[-1][9])%60:0>2}
+Cumulative Time: {math.floor(float(file_line_by_line[-1][9])/60)}:{float(file_line_by_line[-1][9])%60:0>2}
 ''')
+        
+
 if instruction.lower() in ["help", "?"]:
     print()
     print("     HELLO AND WELLCOME TO THE STUDING THING!!!\n")
@@ -120,11 +126,13 @@ summary  |s         | Summerises the current and/or last timer
 data     |d         | Dysplayes all the users previousely stored data in output.csv
 time     |t         | Displayes the current study timer, if not studing, will produce same as sum
 ''')
+    
+
 if instruction.lower() in ["data", "d"]:
     length_needed = []
     for i in file_line_by_line[0]:
         length_needed.append(len(i))
-    length_needed[8] += 6
+    length_needed[8] += 11
     for i in file_line_by_line:
         for n in range(len(i)):
             print(str(i[n])+" "*(length_needed[n]-len(str(i[n]))),"|",end = "")  
@@ -136,6 +144,8 @@ if instruction.lower() in ["data", "d"]:
                 else:
                     print("-",end = "")   
         print()
+
+
 if is_good:
     for i in range(len(file_line_by)):
         if i < len(file_line_by) - 1:
