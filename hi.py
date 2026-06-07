@@ -98,6 +98,8 @@ Last Study Sesion was at {file_line_by_line[-1][1]}:{file_line_by_line[-1][0]:0>
 Studied for {math.floor(delta_t/60)}:{delta_t%60:0>2} 
 Cumulative Time: {math.floor(float(file_line_by_line[-1][9])/60)}:{float(file_line_by_line[-1][9])%60:0>2} 
 ''')
+        
+
 if instruction.lower() in ["sum", "summary", "s"]:
     if len(file_line_by_line[-1]) != len(file_line_by_line[0]):
         delta_t = timern.tm_min -int(file_line_by_line[-1][0]) + 60*(timern.tm_hour - int(file_line_by_line[-1][1]))
@@ -116,10 +118,81 @@ Cumulative Time: {math.floor(float(file_line_by_line[-1][9])/60)}:{float(file_li
         
 
 if instruction.lower() in ["help", "?"]:
-    print()
-    print("     HELLO AND WELLCOME TO THE STUDING THING!!!\n")
-    print("The following is a list of command arguments that can be added to the end of the \n\"python3 hi.py\" call that can be used to make this program do spesific things")
-    print('''\nArgument |Short Cut | What it dose
+    if mode in ["start", "sta"]:
+        print()
+        print(f"          HELP PAGE FOR \"{mode}\"")
+        print()
+        print("Command: python3 hi.py start")
+        print("            OR")
+        print("         python3 hi.py sta")
+        print()
+        print("This command starts the timer, afterwards it ends the program, to end the started timer type \"python3 hi.py sto\"\n")
+        print("When imputed the code will return the follwoing strings")
+        print("Started at: XX:XX\nData: XX-XX-XXXX\nID_Date: XXXXXX")
+    elif mode in ["stop", "sto"]:
+        print()
+        print(f"          HELP PAGE FOR \"{mode}\"")
+        print()
+        print("Command: python3 hi.py stop")
+        print("            OR")
+        print("         python3 hi.py sto")
+        print()
+        print("This command stops the curret running timer, if the timer is not running, then nothing will happen\n")
+        print("When imputed the code will return the follwoing strings:")
+        print("Started at: XX:XX\nData: XX-XX-XXXX\nID_Date: XXXXXX")
+    elif mode in ["help", "?"]:
+        print()
+        print(f"          HELP PAGE FOR \"{mode}\"")
+        print()
+        print("Command: python3 hi.py help")
+        print("            OR")
+        print("         python3 hi.py ?")
+        print()
+        print("This command dispales the documintation for each command, you can add a second command for each of the commands to dysplay documinattion for that spesific command\n")
+    elif mode in ["summary", "s"]:
+        print()
+        print(f"          HELP PAGE FOR \"{mode}\"")
+        print()
+        print("Command: python3 hi.py summary")
+        print("            OR")
+        print("         python3 hi.py s")
+        print()
+        print("This command prints the summary of the most reasiont data")
+    elif mode in ["data", "d"]:
+        print()
+        print(f"          HELP PAGE FOR \"{mode}\"")
+        print()
+        print("Command: python3 hi.py data")
+        print("            OR")
+        print("         python3 hi.py d")
+        print()
+        print("Prints out a table of the raw data collected you can however sift throught the responces using a seccond argument")
+        print()
+        print("Command: python3 hi.py d t")
+        print("Returns the data collected only today")
+        print()
+        print("Command: python3 hi.py d c")
+        print("Returns the data points for each day where that point has the highest cummulative time")
+        print()
+        print("Command: python3 hi.py d M")
+        print("Returns the max time studied in one go for each day")
+        print()
+        print("Command: python3 hi.py d m")
+        print("Returns the min time studied in one go for each day")
+    elif mode in ["t", "time"]:
+        print()
+        print(f"          HELP PAGE FOR \"{mode}\"")
+        print()
+        print("Command: python3 hi.py time")
+        print("            OR")
+        print("         python3 hi.py t")
+        print()
+        print("Displayes the current study timer, if not studing, will produce same as \"python3 hi.py s\"")
+    else:
+        print()
+        print("     HELLO AND WELLCOME TO THE STUDING THING!!!\n")
+        print("The following is a list of command arguments that can be added to the end of the \n\"python3 hi.py\" call that can be used to make this program do spesific things")
+        print('''\nArgument |Short Cut | What it dose
 ---------|----------|------------------------------------------------------------------------------
 start    |sta       | Begins a new timer
 stop     |sto       | Ends the currently running timer
@@ -128,20 +201,53 @@ summary  |s         | Summerises the current and/or last timer
 data     |d         | Dysplayes all the users previousely stored data in output.csv
 time     |t         | Displayes the current study timer, if not studing, will produce same as sum
 ''')
-    
+        
 
 if instruction.lower() in ["data", "d"]:
     print()
     lines = []
     if mode == None:
         lines = [i for i in file_line_by_line if i != file_line_by_line[0] ]
-    if mode in ["t", "today"]:
+        mode = "None"
+    if mode.lower() in ["t", "today"]:
         for i in file_line_by_line:
             try:
                 if int(i[3]) == pow(2, timern.tm_mday)*pow(3, timern.tm_mon)&pow(5, timern.tm_year):
                     lines.append(i)
             except:
                 pass
+    if mode.lower() in ["c", "cummilative"]:
+        n = None
+        for i in [i for i in file_line_by_line if i != file_line_by_line[0] ]:
+            if n == None:
+                n = i
+            if n[3] != i[3]:
+                lines.append(n)
+                n = i
+            if float(n[-1]) < float(i[-1]):
+                n = i
+    if mode.lower() in ["max"] or mode in ["M"]:
+        n = None
+        for i in [i for i in file_line_by_line if i != file_line_by_line[0] ]:
+            if n == None:
+                n = i
+            if n[3] != i[3]:
+                lines.append(n)
+                n = i
+            if float(n[7]) < float(i[7]):
+                n = i
+    if mode.lower() in ["min"] or mode in ["m"]:
+        n = None
+        for i in [i for i in file_line_by_line if i != file_line_by_line[0] ]:
+            if n == None:
+                n = i
+            if n[3] != i[3]:
+                lines.append(n)
+                n = i
+            if float(n[7]) > float(i[7]):
+                n = i
+            
+            
 
     length_needed = []
     for i in file_line_by_line[0]:
