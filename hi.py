@@ -12,7 +12,7 @@ except:
 try:
     mode = arg[1]
 except:
-    mode = "b"
+    mode = None
 
 #opens or creates a new csv file
 try:
@@ -42,13 +42,15 @@ if file_line_by[0] != text:
     sys.exit()
 else:
     is_good = True
+
+
 if instruction.lower() in ["start","sta"] and len(file_line_by_line[-1]) == len(file_line_by_line[0]):
     file_line_by.append(f"{timern.tm_min},{timern.tm_hour},{timern.tm_mday}-{timern.tm_mon}-{timern.tm_year},{pow(2, timern.tm_mday)*pow(3, timern.tm_mon)&pow(5, timern.tm_year)}")
     print(f'''Started at: {timern.tm_hour}:{timern.tm_min:0>2}
 Date: {timern.tm_mday}-{timern.tm_mon}-{timern.tm_year}
 ID_date = {pow(2, timern.tm_mday)*pow(3, timern.tm_mon)&pow(5, timern.tm_year)}''')
     
-    
+
 if instruction.lower() in ["stop","sto"] and len(file_line_by_line[-1]) != len(file_line_by_line[0]):
     delta_t = timern.tm_min -int(file_line_by_line[-1][0]) + 60*(timern.tm_hour - int(file_line_by_line[-1][1]))
     file_line_by[-1] = file_line_by[-1]+ f",{timern.tm_min},{timern.tm_hour},{timern.tm_mday}-{timern.tm_mon}-{timern.tm_year},{delta_t},{delta_t/60}"
@@ -129,20 +131,41 @@ time     |t         | Displayes the current study timer, if not studing, will pr
     
 
 if instruction.lower() in ["data", "d"]:
+    print()
+    lines = []
+    if mode == None:
+        lines = [i for i in file_line_by_line if i != file_line_by_line[0] ]
+    if mode in ["t", "today"]:
+        for i in file_line_by_line:
+            try:
+                if int(i[3]) == pow(2, timern.tm_mday)*pow(3, timern.tm_mon)&pow(5, timern.tm_year):
+                    lines.append(i)
+            except:
+                pass
+
     length_needed = []
     for i in file_line_by_line[0]:
         length_needed.append(len(i))
+    spasing = []
     length_needed[8] += 11
-    for i in file_line_by_line:
+    for i in length_needed:
+        try:
+            spasing.append(spasing[-1] + i + 2)
+        except:
+            spasing.append( i + 1)
+    for n in range(len(file_line_by_line[0])):
+        print(str(file_line_by_line[0][n])+" "*(length_needed[n]-len(str(file_line_by_line[0][n]))),"|",end = "")
+    print()
+    for h in range(spasing[-1]+1):
+        if h in spasing:
+            print("|",end = "")
+        else:
+            print("-",end = "")
+    print()
+
+    for i in lines:
         for n in range(len(i)):
             print(str(i[n])+" "*(length_needed[n]-len(str(i[n]))),"|",end = "")  
-        if i[n] == "Total_Today_min":
-            print()
-            for h in range(128):
-                if h in [127,10,20,32,39,49,58,69,87,110]:
-                    print("|",end = "")
-                else:
-                    print("-",end = "")   
         print()
 
 
