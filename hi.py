@@ -226,6 +226,7 @@ if instruction.lower() in ["data", "d"]:
                 n = i
             if float(n[-1]) < float(i[-1]):
                 n = i
+        lines.append(n)
     if mode.lower() in ["max"] or mode in ["M"]:
         n = None
         for i in [i for i in file_line_by_line if i != file_line_by_line[0] ]:
@@ -236,6 +237,7 @@ if instruction.lower() in ["data", "d"]:
                 n = i
             if float(n[7]) < float(i[7]):
                 n = i
+        lines.append(n)
     if mode.lower() in ["min"] or mode in ["m"]:
         n = None
         for i in [i for i in file_line_by_line if i != file_line_by_line[0] ]:
@@ -246,6 +248,7 @@ if instruction.lower() in ["data", "d"]:
                 n = i
             if float(n[7]) > float(i[7]):
                 n = i
+        lines.append(n)
             
             
 
