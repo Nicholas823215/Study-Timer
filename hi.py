@@ -18,7 +18,7 @@ except:
 try:
     var = arg[2]
 except:
-    var = 4
+    var = 3
 
 try:
     var2 = int(arg[3])
@@ -272,16 +272,19 @@ if instruction.lower() in ["dis", "display"]:
             if len(dates[i][n]) == 0:
                 break
             elif len(dates[i][n]) == 1:
-                diff = [dates[i][n][0] - start*(padding+1)]
+                diff = [dates[i][n][0] ]
                 break
             if n == 0:
-                diff.append(dates[i][0][0]- start*(padding+1))
+                diff.append(dates[i][0][0])
             if n != 0:
                 diff.append(dates[i][n][0] - dates[i][n-1][1])
-            
+        
         if diff != []:
+            word = []
             for n in range(len(diff)):
-                print(" "*diff[n]+ "-"*(dates[i][n][1]- dates[i][n][0]), end = "")
+                word.append( " "*diff[n]+ "-"*(dates[i][n][1]- dates[i][n][0]))
+            word = "".join(word)
+            print(word[start*(padding +1 ):],end = "")
         print("\n"+"-"*(9) + "|")
         diff = []
 
