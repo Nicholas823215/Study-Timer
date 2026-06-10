@@ -213,6 +213,8 @@ if instruction.lower() in ["dis", "display"]:
         cutoff_time_ = time.time() - 604800 #604800 is sec in a week
     elif mode.lower() in ["a", "all"]:
         cutoff_time_ = 0
+    else:
+        cutoff_time_ = time.time() - 604800
     cutoff_time = time.localtime(cutoff_time_) 
     
     date = [h[2].split("-") for h in file_line_by_line.copy()]
@@ -247,16 +249,20 @@ if instruction.lower() in ["dis", "display"]:
             else:
                 break
     
-    padding = int(var)
-    start = var2
+    start = int(var)
+    end = int(var2)
+    padding = math.floor(-110/(start - end))-1
+    if math.floor(-110/(start - end)) == -110/(start - end):
+        padding -= 1
     print(" "*10,end="")
-    for i in range(start,25):
+
+    for i in range(start,end+1):
         print( str(i)+ " "*(-len(str(i)) + padding+1),end="")
     print("\n"+"-"*9,end="")
-    for i in range(start,25):
+    for i in range(start,end+1):
         if i == start:
             print("||" + "-"*padding ,end="")
-        elif i != 24:
+        elif i != end:
             print("|" + "-"*padding ,end="")
         else:
             print("|")
@@ -284,7 +290,7 @@ if instruction.lower() in ["dis", "display"]:
             for n in range(len(diff)):
                 word.append( " "*diff[n]+ "-"*(dates[i][n][1]- dates[i][n][0]))
             word = "".join(word)
-            print(word[start*(padding +1 ):],end = "")
+            print(word[start*(padding +1 ):end*(padding+1)],end = "")
         print("\n"+"-"*(9) + "|")
         diff = []
 
