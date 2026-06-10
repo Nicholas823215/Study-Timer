@@ -1,6 +1,7 @@
 import time
 import sys
 import math
+import help
 
 #gets from the user what to do either "start" or "stop" or "sta" or "sto"
 arg = sys.argv[1:]
@@ -13,6 +14,11 @@ try:
     mode = arg[1]
 except:
     mode = None
+
+try:
+    var = arg[2]
+except:
+    var = 4
 
 #opens or creates a new csv file
 try:
@@ -118,89 +124,7 @@ Cumulative Time: {math.floor(float(file_line_by_line[-1][9])/60)}:{float(file_li
         
 
 if instruction.lower() in ["help", "?"]:
-    if mode in ["start", "sta"]:
-        print()
-        print(f"          HELP PAGE FOR \"{mode}\"")
-        print()
-        print("Command: python3 hi.py start")
-        print("            OR")
-        print("         python3 hi.py sta")
-        print()
-        print("This command starts the timer, afterwards it ends the program, to end the started timer type \"python3 hi.py sto\"\n")
-        print("When imputed the code will return the follwoing strings")
-        print("Started at: XX:XX\nData: XX-XX-XXXX\nID_Date: XXXXXX")
-    elif mode in ["stop", "sto"]:
-        print()
-        print(f"          HELP PAGE FOR \"{mode}\"")
-        print()
-        print("Command: python3 hi.py stop")
-        print("            OR")
-        print("         python3 hi.py sto")
-        print()
-        print("This command stops the curret running timer, if the timer is not running, then nothing will happen\n")
-        print("When imputed the code will return the follwoing strings:")
-        print("Started at: XX:XX\nData: XX-XX-XXXX\nID_Date: XXXXXX")
-    elif mode in ["help", "?"]:
-        print()
-        print(f"          HELP PAGE FOR \"{mode}\"")
-        print()
-        print("Command: python3 hi.py help")
-        print("            OR")
-        print("         python3 hi.py ?")
-        print()
-        print("This command dispales the documintation for each command, you can add a second command for each of the commands to dysplay documinattion for that spesific command\n")
-    elif mode in ["summary", "s"]:
-        print()
-        print(f"          HELP PAGE FOR \"{mode}\"")
-        print()
-        print("Command: python3 hi.py summary")
-        print("            OR")
-        print("         python3 hi.py s")
-        print()
-        print("This command prints the summary of the most reasiont data")
-    elif mode in ["data", "d"]:
-        print()
-        print(f"          HELP PAGE FOR \"{mode}\"")
-        print()
-        print("Command: python3 hi.py data")
-        print("            OR")
-        print("         python3 hi.py d")
-        print()
-        print("Prints out a table of the raw data collected you can however sift throught the responces using a seccond argument")
-        print()
-        print("Command: python3 hi.py d t")
-        print("Returns the data collected only today")
-        print()
-        print("Command: python3 hi.py d c")
-        print("Returns the data points for each day where that point has the highest cummulative time")
-        print()
-        print("Command: python3 hi.py d M")
-        print("Returns the max time studied in one go for each day")
-        print()
-        print("Command: python3 hi.py d m")
-        print("Returns the min time studied in one go for each day")
-    elif mode in ["t", "time"]:
-        print()
-        print(f"          HELP PAGE FOR \"{mode}\"")
-        print()
-        print("Command: python3 hi.py time")
-        print("            OR")
-        print("         python3 hi.py t")
-        print()
-        print("Displayes the current study timer, if not studing, will produce same as \"python3 hi.py s\"")
-    else:
-        print()
-        print("     HELLO AND WELLCOME TO THE STUDING THING!!!\n")
-        print("The following is a list of command arguments that can be added to the end of the \n\"python3 hi.py\" call that can be used to make this program do spesific things")
-        print('''\nArgument |Short Cut | What it dose
----------|----------|------------------------------------------------------------------------------
-start    |sta       | Begins a new timer
-stop     |sto       | Ends the currently running timer
-help     |?         | Help, dyspalys the helps screan
-summary  |s         | Summerises the current and/or last timer
-data     |d         | Dysplayes all the users previousely stored data in output.csv
-time     |t         | Displayes the current study timer, if not studing, will produce same as sum
-''')
+    help.help(mode)
         
 
 if instruction.lower() in ["data", "d"]:
@@ -277,6 +201,83 @@ if instruction.lower() in ["data", "d"]:
             print(str(i[n])+" "*(length_needed[n]-len(str(i[n]))),"|",end = "")  
         print()
 
+
+if instruction.lower() in ["dis", "display"]:
+    plot = []
+    if mode in [None, "n", "None", "none", "Normal", "normal" ]:
+        cutoff_time_ = time.time() - 604800 #604800 is sec in a week
+    if mode.lower in ["a", "all"]:
+        cutoff_time_ = 0
+    cutoff_time = time.localtime(cutoff_time_) 
+    
+    date = [h[2].split("-") for h in file_line_by_line.copy()]
+    date.pop(0)
+    data = []
+    for i in range(len(date)):
+        if int(date[i][2]) > cutoff_time.tm_year:
+            data.append(file_line_by_line[i+1])
+        elif int(date[i][2]) < cutoff_time.tm_year:
+            pass
+        elif int(date[i][1]) > cutoff_time.tm_mon:
+            data.append(file_line_by_line[i+1])
+        elif int(date[i][1]) < cutoff_time.tm_mon:
+            pass
+        elif int(date[i][0]) >= cutoff_time.tm_mday:
+            data.append(file_line_by_line[i+1])
+    
+    if len(file_line_by_line[-1]) != len(file_line_by_line[0]):
+        data[-1].append(str(timern.tm_min))
+        data[-1].append(str(timern.tm_hour))
+        data[-1].append(f"{timern.tm_mday}-{timern.tm_mon}-{timern.tm_year}" )
+
+    dates = [[],[],[],[],[],[],[],[]]
+    dates_ = [(time.localtime(cutoff_time_ + 86400*i).tm_mday,time.localtime(cutoff_time_ + 86400*i).tm_mon, time.localtime(cutoff_time_ + 86400*i).tm_year)  for i in range(0,8)]
+    
+    n = 0
+    for i in range(len(dates_)):
+        while data[n][2].split("-") == [str(dates_[i][0]),str(dates_[i][1]),str(dates_[i][2])]:
+            dates[i].append([int(data[n][1]) + int(data[n][0])/60,int(data[n][5]) + int(data[n][4])/60])
+            if n < len(data)-1:
+                n += 1
+            else:
+                break
+    
+    padding = int(var)
+    print(" "*10,end="")
+    for i in range(25):
+        print( str(i)+ " "*(-len(str(i)) + padding+1),end="")
+    print("\n"+"-"*9,end="")
+    for i in range(25):
+        if i == 0:
+            print("||" + "-"*padding ,end="")
+        elif i != 24:
+            print("|" + "-"*padding ,end="")
+        else:
+            print("|")
+
+    for i in range(len(dates)):
+        for n in range(len(dates[i])):
+            dates[i][n] = [round(dates[i][n][0]*(padding+1)), round(dates[i][n][1]*(padding+1))]
+
+    for i in range(len(dates_)):
+        print(f"{dates_[i][0]}-{dates_[i][1]}-{dates_[i][2]}"+" "*(9 - len(f"{dates_[i][0]}-{dates_[i][1]}-{dates_[i][2]}"))+"|",end = "")
+        diff = []
+        for n in range(len(dates[i])):
+            if len(dates[i][n]) == 0:
+                break
+            elif len(dates[i][n]) == 1:
+                diff = [dates[i][n][0]]
+                break
+            if n == 0:
+                diff.append(dates[i][0][0])
+            if n != 0:
+                diff.append(dates[i][n][0] - dates[i][n-1][1])
+            
+        if diff != []:
+            for n in range(len(diff)):
+                print(" "*diff[n]+ "-"*(dates[i][n][1]- dates[i][n][0]), end = "")
+        print("\n"+"-"*(9) + "|")
+        diff = []
 
 if is_good:
     for i in range(len(file_line_by)):

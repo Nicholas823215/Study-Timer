@@ -1,1 +1,1 @@
-python3 hi.py %1 %2
+python3 hi.py %*
