@@ -20,6 +20,11 @@ try:
 except:
     var = 4
 
+try:
+    var2 = int(arg[3])
+except:
+    var2 = 0
+
 #opens or creates a new csv file
 try:
     file = open("output.csv","r")
@@ -206,7 +211,7 @@ if instruction.lower() in ["dis", "display"]:
     plot = []
     if mode in [None, "n", "None", "none", "Normal", "normal" ]:
         cutoff_time_ = time.time() - 604800 #604800 is sec in a week
-    if mode.lower in ["a", "all"]:
+    elif mode.lower() in ["a", "all"]:
         cutoff_time_ = 0
     cutoff_time = time.localtime(cutoff_time_) 
     
@@ -243,12 +248,13 @@ if instruction.lower() in ["dis", "display"]:
                 break
     
     padding = int(var)
+    start = var2
     print(" "*10,end="")
-    for i in range(25):
+    for i in range(start,25):
         print( str(i)+ " "*(-len(str(i)) + padding+1),end="")
     print("\n"+"-"*9,end="")
-    for i in range(25):
-        if i == 0:
+    for i in range(start,25):
+        if i == start:
             print("||" + "-"*padding ,end="")
         elif i != 24:
             print("|" + "-"*padding ,end="")
@@ -266,10 +272,10 @@ if instruction.lower() in ["dis", "display"]:
             if len(dates[i][n]) == 0:
                 break
             elif len(dates[i][n]) == 1:
-                diff = [dates[i][n][0]]
+                diff = [dates[i][n][0] - start*(padding+1)]
                 break
             if n == 0:
-                diff.append(dates[i][0][0])
+                diff.append(dates[i][0][0]- start*(padding+1))
             if n != 0:
                 diff.append(dates[i][n][0] - dates[i][n-1][1])
             
